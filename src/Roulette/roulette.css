@@ -1,0 +1,15 @@
+.initialPosition{
+  position: absolute;
+  animation-name: animateposition;
+  animation-duration: 5s;
+}
+
+
+@keyframes animateposition{
+  from{
+    top: -4300px;
+  }
+  to{
+    top:0px
+  }
+}
