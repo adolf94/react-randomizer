@@ -6,19 +6,15 @@ import socket from '../socketClient'
 const ChatBoxUi = (props)=>{
   const [msg, setMsg] = useState("")
 
-  const onClickSend = ()=>{
-    socket.emit("send_message",{
-      name:"AR",
-      message:msg,
-      type:"message"
-    })
-    setMsg("")
-  }
-
   const keyPress = (e)=>{
       if(e.keyCode == 13){
         onClickSend()
       }
+  }
+
+  const onClickSend = ()=>{
+    props.onClickSend(msg)
+    setMsg("")
   }
 
   const generateMessage = (c)=>{
@@ -63,7 +59,7 @@ const ChatBoxUi = (props)=>{
           <InputGroup>
             <Form.Control type="text" value={msg} onKeyDown={keyPress} onChange={evt=>setMsg(evt.target.value)}></Form.Control>
             <InputGroup.Append>
-              <Button variant="secondary" onClick={props.onClickSend}>Send</Button>
+              <Button variant="secondary" onClick={()=>props.onClickSend(msg)}>Send</Button>
             </InputGroup.Append>
           </InputGroup>
         </Form.Group>

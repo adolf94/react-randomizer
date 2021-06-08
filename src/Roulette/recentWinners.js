@@ -63,7 +63,8 @@ return <>
               </thead>
               <tbody>
                 {winners.map((w)=><tr>
-                  <td>{}</td>
+                  
+                  <td>{moment(w.time).format("MM-DD")} <br /> {moment(w.time).format("HH:mm")}</td>
                   <td>{w.winner}</td>
                   <td>{w.prizeName}</td>
                 </tr>)}
