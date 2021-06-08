@@ -122,6 +122,10 @@ const RouletteWheel = (props) => {
           <Container>
             <Row>
               <Col md="12">
+                <div className={(socketState.show?'d-none':'d-block')}>
+                  <h2>No current raffle</h2>
+                </div>
+                <b className={(!socketState.show?'d-none':'d-block')}>Currently drawing {socketState.prize}</b>
                 <div style={{margin:'2rem',height:'4.5rem', overflow:'hidden', position:'relative',display:(!socketState.show?'none':'block')}}>
                   <div style={{display:'block'}}>
                     <Container>
@@ -132,15 +136,15 @@ const RouletteWheel = (props) => {
                             </div>
                             {
                               socketState.participants.map((v,i)=><div key={i} className="mb-5">
-                                <h2>Test {i} - {v.name}</h2>
+                                <h2>{v.name}</h2>
                               </div>)
                             }
                         </div>
                       </Row>
-                      
-                    </Container>
+                  </Container>
                   </div>
               </div>
+                
             </Col>
           </Row>
           <Row className="justify-content-center">

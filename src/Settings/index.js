@@ -27,7 +27,7 @@ const SettingsModal = (props)=>{
   return <>
   <Button variant="primary" onClick={()=>setShow(true)} >Settings</Button>
   <Modal show={show} size="lg" onHide={()=>setShow(false)}>
-    <Modal.Header>
+    <Modal.Header closeButton>
       Settings
     </Modal.Header>
     <Modal.Body>
