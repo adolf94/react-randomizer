@@ -39,42 +39,36 @@ const ChatBox = (props)=>{
       socket.off("new_message")
       socket.off("welcome")
     }
-  })
+  }, [chats, props.name])
 
   useEffect(()=>{
-    const newMessage =  data=>{
-      if(!chats.find(c=>c.messageId == data.messageId)){
-        setChats([...chats,{...data, type:"winner"}])
-      }
-    }
+    // const newMessage =  data=>{
+    //   if(!chats.find(c=>c.messageId == data.messageId)){
+    //     setChats([...chats,{...data, type:"winner"}])
+    //   }
+    // }
 
 
-    socket.off("declare_winner", newMessage).on("declare_winner",newMessage)
+    socket.on("declare_winner",onNewMessage)
 
     return ()=>{
-      socket.off("declare_winner", newMessage)
+      socket.off("declare_winner", onNewMessage)
     }
 
-  }, [chats])
+  }, [chats, props.name])
 
   const onNewMessage = (data)=>{
     setChats([...chats,data])
   }
 
-  const onClickSend = ()=>{
+  const onClickSend = (msg)=>{
     socket.emit("send_message",{
-      name:"AR",
+      name:props.name,
       message:msg,
       type:"message"
     })
-    setMsg("")
   }
 
-  const keyPress = (e)=>{
-      if(e.keyCode == 13){
-        onClickSend()
-      }
-  }
 
 
 

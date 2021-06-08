@@ -7,6 +7,7 @@ import SettingsModal from '../Settings';
 import dbContext from '../indexDb/dbContext'
 import socket from '../socketClient'
 import RecentWinners from './recentWinners';
+import queryString from 'query-string'
 const data = [
   { option: '0', style: { backgroundColor: 'green', textColor: 'black' } },
   { option: '1', style: { backgroundColor: 'white', textColor:"black" } },
@@ -20,6 +21,7 @@ const RouletteWheel = (props) => {
   const [winner, setWinner] = useState(1)
   const [show,setShow] = useState(false)
   const [participants, setParticipants] = useState([])
+  const [rollTimer, setTimer] = useState(0)
   const [randomState, setRandomState] = useState({
     show:false,
     participants:[],
@@ -70,6 +72,17 @@ const RouletteWheel = (props) => {
     }
    })
 
+
+   const timerInterval = (num, endResult)=>{
+    let newTime = num - 1
+    setTimer(newTime)
+    // console.log(num);
+    if(newTime > 0){
+      setTimeout(()=>timerInterval(newTime), 950);
+    }
+   }
+
+
   const selectGroup = (group)=>{
     const users = group==="Everyone"?participants:participants.filter(p=>p.type===group)
     setRandomState({...randomState,participantGroup:group,count:users.length,participants:users })
@@ -84,6 +97,8 @@ const RouletteWheel = (props) => {
 
     if(socketState.show){
       socket.emit('roll_random',{...socketState,show:false})
+      setTimer(3)
+      setTimeout(()=>timerInterval(3), 950);
       return
     }
 
@@ -115,7 +130,14 @@ const RouletteWheel = (props) => {
     }).sort((a,b)=>a.randomId-b.randomId)[0]
     db.prizes.add(winner);
     socket.emit('roll_random',{...randomState,show:true, participants:tempusers, winner:winner })
+
+
+
+    setTimer(3)
+    setTimeout(()=>timerInterval(3), 950);
+
   }
+  console.log(rollTimer)
   let distinctType = ["Everyone", ...participants.map(e=>e.type).filter((v,i,s)=>s.indexOf(v)===i).sort()]
 
   return <div className="text-center">
@@ -147,7 +169,7 @@ const RouletteWheel = (props) => {
                 
             </Col>
           </Row>
-          <Row className="justify-content-center">
+          {props.location.search?<Row className="justify-content-center">
             <Col md={6}>
               <Form.Group>
                 <Dropdown>
@@ -169,29 +191,12 @@ const RouletteWheel = (props) => {
               </Form.Group>
             </Col>
             <Col md={4}>
-              <Button variant={socketState.show?'danger':'success'} onClick={rollTheRoleta} >{socketState.show?"Reset":"Spin"}</Button>
+              <Button variant={socketState.show?'danger':'success'} disabled={rollTimer>0} onClick={rollTheRoleta} >{rollTimer>0?rollTimer + ' secs':(socketState.show?"Reset":"Spin")}</Button>
               <SettingsModal participants={participants} onParticipantUpdate={(data)=>setParticipants(data)} />
             </Col>
-          </Row>
+          </Row>:null}
           <RecentWinners {...props}></RecentWinners>
         </Container>
     </div>
-  // return (
-  // <div>
-  //   <div class="d-flex justify-content-center">
-  //     <div>
-  //       <Wheel
-  //         mustStartSpinning={mustSpin}
-  //         prizeNumber={2}
-  //         data={data}
-  //         backgroundColors={['#3e3e3e', '#df3428']}
-  //         textColors={['#ffffff']}
-  //         onStopSpinning={()=>setMustSpin(false)}
-  //       />
-  //       <Button variant="success" onClick={()=>setMustSpin(true)} >Spin</Button>
-  //     </div>
-  //   </div>
-  // </div>
-  // )
 }
 export default RouletteWheel

@@ -24,6 +24,7 @@
     "react-tiny-fab": "^4.0.3",
     "read-excel-file": "^5.1.0",
     "socket.io-client": "^4.1.2",
+    "sweetalert2": "^11.0.16",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

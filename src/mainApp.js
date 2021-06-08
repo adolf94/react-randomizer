@@ -46,7 +46,6 @@ const Randomizer = (props)=>{
 
   const onRegister = ()=>{
     socket.emit("register", {name:name, room:route.params.roomId})
-    setName("");
     setRegistered(true);
     setShow(false);
   }
@@ -59,7 +58,7 @@ const Randomizer = (props)=>{
           <RouletteWheel {...props} ></RouletteWheel>
         </Col>
         <Col md={6}>
-          <ChatBox registered={registered}></ChatBox>
+          <ChatBox name={name} registered={registered}></ChatBox>
         </Col>
       </Row>
       <Modal show={show} onHide={()=>setShow(false)} 
